@@ -10,7 +10,7 @@ const tools = {
       isSuccess: false,
       message: "This is message",
     };
-    this.status = 400;
+    this.status = 200;
   },
 };
 
@@ -56,13 +56,11 @@ export default {
               message: "Logged in successfully",
               data: user,
             };
-            response.status = 200;
           } else {
             response.result.message = "Wrong password";
           }
         } else {
           response.result.message = "Account does not exist";
-          response.status = 404;
         }
         resole(response);
       } catch {
