@@ -11,6 +11,8 @@ const Users = new mongoose.Schema({
   isOnline: { type: Boolean, default: false },
   dateOfBirth: Date,
   friends: [String],
+  requesFriends: [String],
+  wanttobeFriends: [String],
   groups: [String],
   roomIds: [String],
   createdAt: { type: Date, default: Date.now },

@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import Users from "./Users";
+import User from "./Users";
 import Message from "./Messages";
 
 const Conversations = new mongoose.Schema({
   roomId: String,
-  members: [Users],
+  members: [User],
   messages: [Message],
   isGroup: { type: Boolean, default: false },
   avatar: String,

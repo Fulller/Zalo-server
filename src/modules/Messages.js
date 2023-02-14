@@ -3,6 +3,7 @@ import Users from "./Users";
 
 const Messages = new mongoose.Schema({
   content: String,
+  type: String,
   sender: {
     type: Users,
     default: {},
