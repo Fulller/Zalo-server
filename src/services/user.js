@@ -189,12 +189,25 @@ export default {
       let response = new tools.response();
       try {
         let user = await User.findOne({ userName: param.userName });
-        if (user) {
+        let inforusers = await Promise.all(
+          user[param.type || "friends"].map(async (userName) => {
+            let dataUser = await User.findOne({ userName: userName });
+            return {
+              userName: dataUser.userName,
+              showName: dataUser.showName,
+              avatar: dataUser.avatar,
+              isOnline: dataUser.isOnline,
+              friends: dataUser.friends,
+              groups: dataUser.groups,
+            };
+          })
+        );
+        if (inforusers) {
           response.result = {
             isSuccess: true,
             code: "013",
             type: param.type || "friends",
-            data: user[param.type || "friends"],
+            data: inforusers,
           };
         } else {
           response.result.code = "005";
@@ -202,6 +215,34 @@ export default {
         resole(response);
       } catch {
         resole.result.code = "000";
+        reject(response);
+      }
+    });
+  },
+  getinfouser: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let user = await User.findOne({ userName: param.userName });
+        if (user) {
+          response.result = {
+            isSuccess: true,
+            code: "014",
+            data: {
+              userName: user.userName,
+              showName: user.showName,
+              avatar: user.avatar,
+              isOnline: user.isOnline,
+              friends: user.friends,
+              groups: user.groups,
+            },
+          };
+        } else {
+          response.result.code = "015";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
         reject(response);
       }
     });
@@ -222,3 +263,5 @@ export default {
 //011 Xóa bạn thành công
 //012 Không tìm thấy người dùng hoặc đã xóa bạn
 //013 Trả về danh sách thành công
+//014 Lấy thông tin người dùng thành công
+//015 Lấy thông tin người dùng thất bại

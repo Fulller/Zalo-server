@@ -25,4 +25,8 @@ export default {
     const { result, status } = await userServices.gettypefriends(req.query);
     return res.status(status).json(result);
   },
+  getinfouser: async (req, res) => {
+    const { result, status } = await userServices.getinfouser(req.query);
+    return res.status(status).json(result);
+  },
 };
