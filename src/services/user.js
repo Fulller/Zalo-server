@@ -1,5 +1,7 @@
 import User from "../modules/Users.js";
 import bcrypt from "bcrypt";
+import Conversation from "../modules/Conversations.js";
+import Message from "../modules/Messages.js";
 
 const tools = {
   comparePassword: function (yourPassword, hashPassword) {
@@ -11,6 +13,13 @@ const tools = {
       code: "000",
     };
     this.status = 200;
+  },
+  mergeUserName: function (userName1, userName2) {
+    if (userName1 < userName2) {
+      return userName1 + userName2;
+    } else {
+      return userName2 + userName1;
+    }
   },
 };
 
@@ -81,6 +90,10 @@ export default {
       try {
         let user = await User.findOne({ userName: param.userName });
         let userFriend = await User.findOne({ userName: param.userNameFriend });
+        if (param.userName == param.userNameFriend) {
+          response.result.code = "008";
+          resole(response);
+        }
         if (
           user &&
           userFriend &&
@@ -116,6 +129,10 @@ export default {
       try {
         let user = await User.findOne({ userName: param.userName });
         let userFriend = await User.findOne({ userName: param.userNameFriend });
+        if (param.userName == param.userNameFriend) {
+          response.result.code = "010";
+          resole(response);
+        }
         if (
           user &&
           userFriend &&
@@ -123,11 +140,18 @@ export default {
             return friend != param.userNameFriend;
           })
         ) {
+          await Conversation.create({
+            conversationId: tools.mergeUserName(
+              user.userName,
+              userFriend.userName
+            ),
+            members: [user, userFriend],
+          });
           user.friends.push(param.userNameFriend);
+          userFriend.friends.push(param.userName);
           user.requesFriends = user.requesFriends.filter((friend) => {
             return friend != param.userNameFriend;
           });
-          userFriend.friends.push(param.userName);
           userFriend.wanttobeFriends = user.wanttobeFriends.filter((friend) => {
             return friend != param.userName;
           });
@@ -154,6 +178,10 @@ export default {
       try {
         let user = await User.findOne({ userName: param.userName });
         let userFriend = await User.findOne({ userName: param.userNameFriend });
+        if (param.userName == param.userNameFriend) {
+          response.result.code = "0012";
+          resole(response);
+        }
         if (
           user &&
           userFriend &&
@@ -161,6 +189,16 @@ export default {
             return friend == param.userNameFriend;
           })
         ) {
+          // user.roomIds = user.roomIds.filter((roomId) => {
+          //   return (
+          //     roomId != tools.mergeRoomId(user.userName, userFriend.userName)
+          //   );
+          // });
+          // userFriend.roomIds = userFriend.roomIds.filter((roomId) => {
+          //   return (
+          //     roomId != tools.mergeRoomId(user.userName, userFriend.userName)
+          //   );
+          // });
           user.friends = user.friends.filter((friend) => {
             return friend != param.userNameFriend;
           });
@@ -214,7 +252,7 @@ export default {
         }
         resole(response);
       } catch {
-        resole.result.code = "000";
+        response.result.code = "000";
         reject(response);
       }
     });
@@ -247,6 +285,83 @@ export default {
       }
     });
   },
+  sendmessage: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let conversation = await Conversation.findOne({
+          conversationId: param.conversationId,
+        });
+        if (conversation) {
+          let message = new Message({
+            content: param.content,
+            sender: param.sender,
+          });
+          conversation.messages.push(message);
+          conversation.save();
+          response.result = {
+            isSuccess: true,
+            code: "016",
+            data: message,
+          };
+        } else {
+          response.result.code = "017";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
+  getconversation: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let conversation = await Conversation.findOne({
+          conversationId: param.conversationId,
+        });
+        if (conversation) {
+          response.result = {
+            isSuccess: true,
+            code: "018",
+            data: conversation,
+          };
+        } else {
+          response.result.code = "019";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
+  findfriend: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let userFriend = await User.findOne({ userName: param.userNameFriend });
+        if (userFriend) {
+          response.result = {
+            code: "020",
+            isSuccess: true,
+            data: {
+              userName: userFriend.userName,
+              showName: userFriend.showName,
+              avatar: userFriend.avatar,
+            },
+          };
+        } else {
+          response.result.code = "021";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
 };
 
 //000 Đã có lỗi sảy ra
@@ -265,3 +380,9 @@ export default {
 //013 Trả về danh sách thành công
 //014 Lấy thông tin người dùng thành công
 //015 Lấy thông tin người dùng thất bại
+//016 Gửi tin nhắn thành công
+//017 Gửi tin nhắn thất bại do chưa có cuộc hội thoại
+//018 Lấy thông tin cuộc trò truyền thành công
+//019 Lây thông tin cuộc trò truyện thất bại
+//020 Tìm bạn thành công
+//021 Không tìm thấy người dùng

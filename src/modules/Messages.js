@@ -1,15 +1,13 @@
 import mongoose from "mongoose";
-import Users from "./Users";
+import Users from "./Users.js";
 
 const Messages = new mongoose.Schema({
   content: String,
-  type: String,
-  sender: {
-    type: Users,
-    default: {},
-  },
+  image: Buffer,
+  type: { type: String, default: "message" },
+  sender: String,
   isRecover: { type: Boolean, default: false },
-  deleteBy: [Users],
+  deleteBy: String,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

@@ -29,4 +29,16 @@ export default {
     const { result, status } = await userServices.getinfouser(req.query);
     return res.status(status).json(result);
   },
+  sendmessage: async (req, res) => {
+    const { result, status } = await userServices.sendmessage(req.body);
+    return res.status(status).json(result);
+  },
+  getconversation: async (req, res) => {
+    const { result, status } = await userServices.getconversation(req.query);
+    return res.status(status).json(result);
+  },
+  findfriend: async (req, res) => {
+    const { result, status } = await userServices.findfriend(req.query);
+    return res.status(status).json(result);
+  },
 };
