@@ -15,6 +15,7 @@ const Users = new mongoose.Schema({
   wanttobeFriends: [String],
   groups: [String],
   roomIds: [String],
+  messagesHistory: [String],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

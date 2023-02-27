@@ -41,4 +41,14 @@ export default {
     const { result, status } = await userServices.findfriend(req.query);
     return res.status(status).json(result);
   },
+  updatamessageshistory: async (req, res) => {
+    const { result, status } = await userServices.updatamessageshistory(
+      req.body
+    );
+    return res.status(status).json(result);
+  },
+  getoptional: async (req, res) => {
+    const { result, status } = await userServices.getoptional(req.query);
+    return res.status(status).json(result);
+  },
 };

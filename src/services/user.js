@@ -33,7 +33,7 @@ export default {
           response.result.code = "001";
         } else {
           if (param.userName.length >= 6 && param.password.length >= 6) {
-            let data = await User.create({
+            let user = await User.create({
               userName: param.userName,
               password: bcrypt.hashSync(param.password, 10),
               showName: param.showName,
@@ -45,7 +45,15 @@ export default {
             response.result = {
               isSuccess: true,
               code: "002",
-              data: data,
+              data: {
+                _id: user._id,
+                avatar: user.avatar,
+                createdAt: user.createdAt,
+                roomIds: user.roomIds,
+                showName: user.showName,
+                userName: user.userName,
+                updatedAt: user.updatedAt,
+              },
             };
             response.status = 201;
           } else {
@@ -69,7 +77,15 @@ export default {
             response.result = {
               isSuccess: true,
               code: "003",
-              data: user,
+              data: {
+                _id: user._id,
+                avatar: user.avatar,
+                createdAt: user.createdAt,
+                roomIds: user.roomIds,
+                showName: user.showName,
+                userName: user.userName,
+                updatedAt: user.updatedAt,
+              },
             };
           } else {
             response.result.code = "004";
@@ -202,16 +218,33 @@ export default {
           user.friends = user.friends.filter((friend) => {
             return friend != param.userNameFriend;
           });
+          user.messagesHistory = user.messagesHistory.filter(
+            (conversationId) => {
+              return (
+                conversationId !=
+                tools.mergeUserName(user.userName, userFriend.userName)
+              );
+            }
+          );
           userFriend.friends = userFriend.friends.filter((friend) => {
             return friend != param.userName;
           });
-          user.save();
-          userFriend.save();
+          userFriend.messagesHistory = userFriend.messagesHistory.fill(
+            (conversationId) => {
+              return (
+                conversationId !=
+                tools.mergeUserName(user.userName, userFriend.userName)
+              );
+            }
+          );
+
           response.result = {
             isSuccess: true,
             code: "011",
             data: user.friends,
           };
+          user.save();
+          userFriend.save();
         } else {
           response.result.code = "012";
         }
@@ -362,6 +395,86 @@ export default {
       }
     });
   },
+  updatamessageshistoryError: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let user = await User.findOne({ userName: param.userName });
+        if (user) {
+          if (user.messagesHistory) {
+            user.messagesHistory = user.messagesHistory.filter((mh) => {
+              return mh != param.conversationId;
+            });
+            user.messagesHistory.unshift(param.conversationId);
+          } else {
+            user.messagesHistory = [param.conversationId];
+          }
+          response.result = {
+            isSuccess: true,
+            code: "022",
+            data: user.messagesHistory,
+          };
+          user.save();
+        } else {
+          response.result.code = "023";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
+  getoptional: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let user = await User.findOne({ userName: param.userName });
+        if (user && user[param.optional]) {
+          response.result = {
+            isSuccess: true,
+            code: "024",
+            data: user[param.optional] || null,
+          };
+        } else {
+          response.result.code = "025";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
+  updatamessageshistory: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let user = await User.findOne({ userName: param.userName });
+        if (user) {
+          let messagesHistory = user.messagesHistory.filter((mh) => {
+            return mh != param.conversationId;
+          });
+          messagesHistory.unshift(param.conversationId);
+          await User.updateOne(
+            { userName: param.userName },
+            { messagesHistory: messagesHistory }
+          );
+          response.result = {
+            isSuccess: true,
+            code: "022",
+            data: messagesHistory,
+          };
+        } else {
+          response.result.code = "023";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
 };
 
 //000 Đã có lỗi sảy ra
@@ -386,3 +499,7 @@ export default {
 //019 Lây thông tin cuộc trò truyện thất bại
 //020 Tìm bạn thành công
 //021 Không tìm thấy người dùng
+//022 Cập nhật messages history thàng công
+//023 Cập nhật messages history thất bại
+//024 Lấy dữ liệu theo tùy chọn thành công
+//025 Lấy dữ liệu theo tùy chọn không thành công
