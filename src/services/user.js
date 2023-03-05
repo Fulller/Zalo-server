@@ -41,6 +41,7 @@ export default {
               avatar:
                 "https://images.assetsdelivery.com/compings_v2/koblizeek/koblizeek2001/koblizeek200100050.jpg",
               roomIds: [param.userName],
+              messagesHistory: [],
             });
             response.result = {
               isSuccess: true,
@@ -161,7 +162,7 @@ export default {
               user.userName,
               userFriend.userName
             ),
-            members: [user, userFriend],
+            members: [user.userName, userFriend.userName],
           });
           user.friends.push(param.userNameFriend);
           userFriend.friends.push(param.userName);
@@ -205,16 +206,6 @@ export default {
             return friend == param.userNameFriend;
           })
         ) {
-          // user.roomIds = user.roomIds.filter((roomId) => {
-          //   return (
-          //     roomId != tools.mergeRoomId(user.userName, userFriend.userName)
-          //   );
-          // });
-          // userFriend.roomIds = userFriend.roomIds.filter((roomId) => {
-          //   return (
-          //     roomId != tools.mergeRoomId(user.userName, userFriend.userName)
-          //   );
-          // });
           user.friends = user.friends.filter((friend) => {
             return friend != param.userNameFriend;
           });
@@ -237,6 +228,12 @@ export default {
               );
             }
           );
+          Conversation.remove({
+            conversationId: tools.mergeUserName(
+              user.userName,
+              userFriend.userName
+            ),
+          }).exec();
 
           response.result = {
             isSuccess: true,

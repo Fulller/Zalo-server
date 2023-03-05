@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import Users from "./Users.js";
 
 const Messages = new mongoose.Schema({
   content: String,
@@ -10,6 +9,7 @@ const Messages = new mongoose.Schema({
   deleteBy: String,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  timezone: { type: String, default: "Asia/Hanoi" },
 });
 
 export default mongoose.model("Messages", Messages);

@@ -4,7 +4,7 @@ import User from "./Users.js";
 
 const Conversations = new mongoose.Schema({
   conversationId: String,
-  members: [User.schema],
+  members: [String],
   messages: [Message.schema],
   isGroup: { type: Boolean, default: false },
   avatar: String,
