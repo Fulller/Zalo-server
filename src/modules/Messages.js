@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const Messages = new mongoose.Schema({
   content: String,
-  image: Buffer,
   type: { type: String, default: "message" },
   sender: String,
   isRecover: { type: Boolean, default: false },

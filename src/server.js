@@ -34,6 +34,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.static("public"));
 routeConfig(app);
 
 // app.use(passport.initialize());
