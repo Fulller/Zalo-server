@@ -49,7 +49,7 @@ export default {
             data: data,
           };
         } else {
-          resole.result.code = "103";
+          response.result.code = "103";
         }
         resole(response);
       } catch {

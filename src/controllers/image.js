@@ -13,6 +13,7 @@ export default {
   },
   get: async (req, res) => {
     const { result, status } = await imageServices.get(req.query);
-    res.status(status).json(result);
+    res.contentType("image/jpeg");
+    res.send(result.data.data);
   },
 };
