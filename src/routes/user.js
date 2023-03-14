@@ -14,5 +14,6 @@ route.get("/getconversation", userControllers.getconversation);
 route.get("/findfriend", userControllers.findfriend);
 route.put("/updatamessageshistory", userControllers.updatamessageshistory);
 route.get("/getoptional", userControllers.getoptional);
+route.put("/updateinfouser", userControllers.updateinfouser);
 
 export default route;

@@ -51,4 +51,8 @@ export default {
     const { result, status } = await userServices.getoptional(req.query);
     return res.status(status).json(result);
   },
+  updateinfouser: async (req, res) => {
+    const { result, status } = await userServices.updateinfouser(req.body);
+    return res.status(status).json(result);
+  },
 };

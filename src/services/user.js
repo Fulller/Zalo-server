@@ -2,6 +2,7 @@ import User from "../modules/Users.js";
 import bcrypt from "bcrypt";
 import Conversation from "../modules/Conversations.js";
 import Message from "../modules/Messages.js";
+import user from "../controllers/user.js";
 
 const tools = {
   comparePassword: function (yourPassword, hashPassword) {
@@ -261,6 +262,7 @@ export default {
           user[param.type || "friends"].map(async (userName) => {
             let dataUser = await User.findOne({ userName: userName });
             return {
+              id: dataUser._id,
               userName: dataUser.userName,
               showName: dataUser.showName,
               avatar: dataUser.avatar,
@@ -293,17 +295,11 @@ export default {
       try {
         let user = await User.findOne({ userName: param.userName });
         if (user) {
+          user.password = null;
           response.result = {
             isSuccess: true,
             code: "014",
-            data: {
-              userName: user.userName,
-              showName: user.showName,
-              avatar: user.avatar,
-              isOnline: user.isOnline,
-              friends: user.friends,
-              groups: user.groups,
-            },
+            data: user,
           };
         } else {
           response.result.code = "015";
@@ -472,6 +468,33 @@ export default {
       }
     });
   },
+  updateinfouser: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let user = await User.findOne({ userName: param.userName });
+        if (user) {
+          if (!!param?.avatar) {
+            user.avatar = param.avatar;
+          }
+          if (!!param?.showName) {
+            user.showName = param.showName;
+          }
+          user.save();
+          response.result = {
+            isSuccess: true,
+            code: "026",
+          };
+        } else {
+          response.result.code = "027";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
 };
 
 //000 Đã có lỗi sảy ra
@@ -500,3 +523,5 @@ export default {
 //023 Cập nhật messages history thất bại
 //024 Lấy dữ liệu theo tùy chọn thành công
 //025 Lấy dữ liệu theo tùy chọn không thành công
+//026 Cập nhật thông tin người dùng thành công
+//027 Cập nhật thông tin người dùng thất bại
