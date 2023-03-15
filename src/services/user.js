@@ -322,6 +322,7 @@ export default {
           let message = new Message({
             content: param.content,
             sender: param.sender,
+            type: param.type,
           });
           conversation.messages.push(message);
           conversation.save();
