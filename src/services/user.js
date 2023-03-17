@@ -34,13 +34,67 @@ export default {
           response.result.code = "001";
         } else {
           if (param.userName.length >= 6 && param.password.length >= 6) {
+            function removeVietnameseTones(str) {
+              str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+              str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+              str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+              str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+              str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+              str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+              str = str.replace(/đ/g, "d");
+              str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+              str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+              str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+              str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+              str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+              str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+              str = str.replace(/Đ/g, "D");
+              str = str.replace(/\u02C6|\u0306|\u031B/g, ""); // ˆ ̆ ̛  Â, Ê, Ă, Ơ, Ư
+              str = str.replace(/ + /g, " ");
+              str = str.trim();
+              str = str.replace(
+                /!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g,
+                " "
+              );
+              return str;
+            }
+            let avatarMap = {
+              a: "6414bd62469830dcbd05a4e1",
+              b: "6414bd75a01e923c710ae424",
+              c: "6414bd88deac215843789e75",
+              d: "6414bd99123027ce3ad01f97",
+              e: "6414bdb08d34605cec69dcba",
+              f: "6414bdcfb0f89b29fa8d8795",
+              g: "6414bdf1f68ce38b30758026",
+              h: "6414be17eb1df4028043065f",
+              i: "6414be3a4004b8966769c948",
+              j: "6414be4eeb6e0a3c769cbce8",
+              k: "6414be7682ae9ff57cb75dc3",
+              l: "6414be9ee73e851940cfd871",
+              m: "6414beb56ae0a43f6e8ebd98",
+              n: "6414bec95802d417ea14643f",
+              o: "6414beeecbe19c65e28c78bd",
+              p: "6414bf10621b48f800b9f595",
+              q: "6414bf2153499fad7eb7d22f",
+              r: "6414bf3feb418ce2ff994ca7",
+              s: "6414bf5737d03c21bfbb4768",
+              t: "6414bf6faf74b641cdab7e4c",
+              u: "6414bf80fc38a57954616a68",
+              v: "6414bfc7cc17027952286106",
+              w: "6414bfb6e04e8e3c0dd34d7e",
+              x: "6414bfd6965f242b3a45d3b0",
+              y: "6414bfe3965f242b3a45d3b2",
+              z: "6414bff1afd330e7d2f801d1",
+            };
             let user = await User.create({
               userName: param.userName,
               password: bcrypt.hashSync(param.password, 10),
               showName: param.showName,
               sex: param.sex,
               avatar:
-                "https://images.assetsdelivery.com/compings_v2/koblizeek/koblizeek2001/koblizeek200100050.jpg",
+                avatarMap[
+                  removeVietnameseTones(param.showName[0].toLowerCase())
+                ],
               roomIds: [param.userName],
               messagesHistory: [],
             });
