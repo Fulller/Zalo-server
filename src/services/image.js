@@ -1,5 +1,6 @@
 import Image from "../modules/Images.js";
 import fs from "fs";
+import pathpublic from "../../public/index.js";
 
 const tools = {
   response: function () {
@@ -16,12 +17,17 @@ export default {
     return new Promise(async (resole, reject) => {
       let response = new tools.response();
       try {
+        const anotherFile = new URL(param.file?.filename, import.meta.url);
         const img = {
-          data: fs.readFileSync(
-            "Y:/VSCodeWorkspace/FullStack/Zalo/server/public/" +
-              "images/" +
-              param.file?.filename
-          ),
+          // data: fs.readFileSync(
+          //   "Y:/VSCodeWorkspace/FullStack/Zalo/server/" + param.file?.path
+          // ),
+          // data: fs.readFileSync(
+          //   path
+          //     .normalize(anotherFile?.href.split("src")[0] + param.file?.path)
+          //     .replace("file:\\", "")
+          // ),
+          data: fs.readFileSync(pathpublic + "/images/" + param.file.filename),
           contentType: "image/png",
         };
         let dataImg = await Image.create(img);
