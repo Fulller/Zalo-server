@@ -496,6 +496,55 @@ export default {
       }
     });
   },
+  sendmessageV2: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let message = await Message.create({
+          conversationId: param.conversationId,
+          content: param.content,
+          sender: param.sender,
+          type: param.type,
+        });
+        if (message) {
+          response.result = {
+            isSuccess: true,
+            data: message,
+            code: "028",
+          };
+        } else {
+          response.result.code = "029";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
+  getmessageV2: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let messages = await Message.find({
+          conversationId: param.conversationId,
+        });
+        if (messages) {
+          response.result = {
+            isSuccess: true,
+            data: messages,
+            code: "030",
+          };
+        } else {
+          response.result.code = "031";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
 };
 
 //000 Đã có lỗi sảy ra
@@ -526,3 +575,5 @@ export default {
 //025 Lấy dữ liệu theo tùy chọn không thành công
 //026 Cập nhật thông tin người dùng thành công
 //027 Cập nhật thông tin người dùng thất bại
+//028 Gửi tin nhắn thành công
+//029 Gửi tin nhắn thất bại

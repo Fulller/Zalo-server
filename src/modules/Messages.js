@@ -1,14 +1,14 @@
 import mongoose from "mongoose";
 
 const Messages = new mongoose.Schema({
-  content: String,
+  conversationId: String,
+  content: { type: String, require: true },
   type: { type: String, default: "message" },
-  sender: String,
+  sender: { type: String, require: true },
   isRecover: { type: Boolean, default: false },
   deleteBy: String,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
-  timezone: { type: String, default: "Asia/Hanoi" },
 });
 
 export default mongoose.model("Messages", Messages);

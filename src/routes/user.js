@@ -15,5 +15,7 @@ route.get("/findfriend", userControllers.findfriend);
 route.put("/updatamessageshistory", userControllers.updatamessageshistory);
 route.get("/getoptional", userControllers.getoptional);
 route.put("/updateinfouser", userControllers.updateinfouser);
+route.post("/sendmessageV2", userControllers.sendmessageV2);
+route.get("/getmessageV2", userControllers.getmessageV2);
 
 export default route;
