@@ -21,7 +21,7 @@ export default {
         console.log({
           type1: pathpublic + "/images/" + param.file.filename,
           type2: anotherFile,
-          type3: file,
+          type3: param.file,
         });
         const img = {
           // data: fs.readFileSync(
