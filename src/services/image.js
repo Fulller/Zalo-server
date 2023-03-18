@@ -18,6 +18,11 @@ export default {
       let response = new tools.response();
       try {
         const anotherFile = new URL(param.file?.filename, import.meta.url);
+        console.log({
+          type1: pathpublic + "/images/" + param.file.filename,
+          type2: anotherFile,
+          type3: file,
+        });
         const img = {
           // data: fs.readFileSync(
           //   "Y:/VSCodeWorkspace/FullStack/Zalo/server/" + param.file?.path
