@@ -323,6 +323,7 @@ export default {
               isOnline: dataUser.isOnline,
               friends: dataUser.friends,
               groups: dataUser.groups,
+              background: dataUser.background,
             };
           })
         );
@@ -534,6 +535,9 @@ export default {
           }
           if (!!param?.showName) {
             user.showName = param.showName;
+          }
+          if (!!param?.background) {
+            user.background = param.background;
           }
           user.save();
           response.result = {
