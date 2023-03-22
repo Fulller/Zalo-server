@@ -324,6 +324,7 @@ export default {
               friends: dataUser.friends,
               groups: dataUser.groups,
               background: dataUser.background,
+              sex: dataUser.sex,
             };
           })
         );
@@ -603,6 +604,32 @@ export default {
       }
     });
   },
+  deletemessageonmyside: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let message = await Message.findById(param.id);
+        if (message && param.userName) {
+          message.deleteBy = message.deleteBy.filter((userDelete) => {
+            return userDelete != param.userName;
+          });
+          message.deleteBy.push(param.userName);
+          message.save();
+          response.result = {
+            isSuccess: true,
+            code: "032",
+            data: message,
+          };
+        } else {
+          response.result.code = "033";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
 };
 
 //000 Đã có lỗi sảy ra
@@ -635,3 +662,7 @@ export default {
 //027 Cập nhật thông tin người dùng thất bại
 //028 Gửi tin nhắn thành công
 //029 Gửi tin nhắn thất bại
+//030 Lấy tin nhắn thành công
+//031 lấy tin nhắn thất bại
+//032 Xóa tin nhắn thành công
+//033 Xóa tin nhắn thất bại

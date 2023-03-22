@@ -63,4 +63,10 @@ export default {
     const { result, status } = await userServices.getmessageV2(req.query);
     return res.status(status).json(result);
   },
+  deletemessageonmyside: async (req, res) => {
+    const { result, status } = await userServices.deletemessageonmyside(
+      req.body
+    );
+    return res.status(status).json(result);
+  },
 };

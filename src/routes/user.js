@@ -17,5 +17,6 @@ route.get("/getoptional", userControllers.getoptional);
 route.put("/updateinfouser", userControllers.updateinfouser);
 route.post("/sendmessageV2", userControllers.sendmessageV2);
 route.get("/getmessageV2", userControllers.getmessageV2);
+route.delete("/deletemessageonmyside", userControllers.deletemessageonmyside);
 
 export default route;
