@@ -653,6 +653,29 @@ export default {
       }
     });
   },
+  seenmessage: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let message = await Message.findById(param.id);
+        if (message) {
+          message.status = "seen";
+          message.save();
+          response.result = {
+            isSuccess: true,
+            code: "035",
+            data: message,
+          };
+        } else {
+          response.result.code = "036";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
 };
 
 //000 Đã có lỗi sảy ra

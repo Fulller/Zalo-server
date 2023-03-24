@@ -19,5 +19,6 @@ route.post("/sendmessageV2", userControllers.sendmessageV2);
 route.get("/getmessageV2", userControllers.getmessageV2);
 route.delete("/deletemessageonmyside", userControllers.deletemessageonmyside);
 route.delete("/recallmessage", userControllers.recallmessage);
+route.put("/seenmessage", userControllers.seenmessage);
 
 export default route;
