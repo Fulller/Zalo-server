@@ -69,4 +69,8 @@ export default {
     );
     return res.status(status).json(result);
   },
+  recallmessage: async (req, res) => {
+    const { result, status } = await userServices.recallmessage(req.body);
+    return res.status(status).json(result);
+  },
 };

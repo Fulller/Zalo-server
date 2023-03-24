@@ -630,6 +630,29 @@ export default {
       }
     });
   },
+  recallmessage: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let message = await Message.findById(param.id);
+        if (message && param.userName == message.sender) {
+          message.isRecall = true;
+          message.save();
+          response.result = {
+            isSuccess: true,
+            code: "034",
+            data: message,
+          };
+        } else {
+          response.result.code = "035";
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
 };
 
 //000 Đã có lỗi sảy ra
