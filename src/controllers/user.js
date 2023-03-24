@@ -73,4 +73,8 @@ export default {
     const { result, status } = await userServices.recallmessage(req.body);
     return res.status(status).json(result);
   },
+  seenmessage: async (req, res) => {
+    const { result, status } = await userServices.seenmessage(req.body);
+    return res.status(status).json(result);
+  },
 };

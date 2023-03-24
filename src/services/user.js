@@ -653,6 +653,27 @@ export default {
       }
     });
   },
+  seenmessage: function (param) {
+    return new Promise(async (resole, reject) => {
+      let response = new tools.response();
+      try {
+        let message = await Message.findById(param.id);
+        if (message) {
+          message.status = "seen";
+          message.save;
+          response.result = {
+            isSuccess: true,
+            code: "036",
+            data: message,
+          };
+        }
+        resole(response);
+      } catch {
+        response.result.code = "000";
+        reject(response);
+      }
+    });
+  },
 };
 
 //000 Đã có lỗi sảy ra
@@ -689,3 +710,7 @@ export default {
 //031 lấy tin nhắn thất bại
 //032 Xóa tin nhắn thành công
 //033 Xóa tin nhắn thất bại
+//034 Thu hồi tin nhắn thành công
+//035 Thu hồi tin nhắn không thành công
+//036 Đã xem tin nhắn
+//037 Xem tin nhắn thất bại

@@ -6,6 +6,7 @@ const Messages = new mongoose.Schema({
   type: { type: String, default: "message" },
   sender: { type: String, require: true },
   isRecall: { type: Boolean, default: false },
+  status: { type: String, default: "sent" },
   deleteBy: [String],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
