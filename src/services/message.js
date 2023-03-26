@@ -150,12 +150,26 @@ export default {
       try {
         let { userName, conversationId } = param;
         let user = await User.findOne({ userName });
-        let messsages = await Message.find({ conversationId });
-        if (user && messsages) {
+        let messages = await Message.find({ conversationId });
+
+        if (user && messages) {
+          for (let message of messages) {
+            message.deleteBy = message.deleteBy.filter((userNamedltB) => {
+              return userNamedltB != userName;
+            });
+            message.deleteBy.push(userName);
+            message.save();
+          }
+          user.messagesHistory = user.messagesHistory.filter(
+            (conversationIdmsh) => {
+              return conversationIdmsh != conversationId;
+            }
+          );
+          user.save();
           response.result = {
             isSuccess: true,
             code: "211",
-            data: { user, messsages },
+            data: { user, messages },
           };
         } else {
           response.result.code = "212";
