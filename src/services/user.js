@@ -539,6 +539,9 @@ export default {
           if (!!param?.background) {
             user.background = param.background;
           }
+          if (!!param?.sex) {
+            user.sex = param.sex;
+          }
           user.save();
           response.result = {
             isSuccess: true,

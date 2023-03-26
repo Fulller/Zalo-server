@@ -7,7 +7,7 @@ const Users = new mongoose.Schema({
   avatar: String,
   background: String,
   describe: String,
-  sex: String,
+  sex: { type: String, default: "male" },
   isOnline: { type: Boolean, default: false },
   dateOfBirth: Date,
   friends: [String],
