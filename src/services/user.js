@@ -2,7 +2,6 @@ import User from "../modules/Users.js";
 import bcrypt from "bcrypt";
 import Conversation from "../modules/Conversations.js";
 import Message from "../modules/Messages.js";
-import user from "../controllers/user.js";
 
 const tools = {
   comparePassword: function (yourPassword, hashPassword) {
@@ -555,125 +554,6 @@ export default {
       }
     });
   },
-  sendmessageV2: function (param) {
-    return new Promise(async (resole, reject) => {
-      let response = new tools.response();
-      try {
-        let message = await Message.create({
-          conversationId: param.conversationId,
-          content: param.content,
-          sender: param.sender,
-          type: param.type,
-        });
-        if (message) {
-          response.result = {
-            isSuccess: true,
-            data: message,
-            code: "028",
-          };
-        } else {
-          response.result.code = "029";
-        }
-        resole(response);
-      } catch {
-        response.result.code = "000";
-        reject(response);
-      }
-    });
-  },
-  getmessageV2: function (param) {
-    return new Promise(async (resole, reject) => {
-      let response = new tools.response();
-      try {
-        let messages = await Message.find({
-          conversationId: param.conversationId,
-        });
-        if (messages) {
-          response.result = {
-            isSuccess: true,
-            data: messages,
-            code: "030",
-          };
-        } else {
-          response.result.code = "031";
-        }
-        resole(response);
-      } catch {
-        response.result.code = "000";
-        reject(response);
-      }
-    });
-  },
-  deletemessageonmyside: function (param) {
-    return new Promise(async (resole, reject) => {
-      let response = new tools.response();
-      try {
-        let message = await Message.findById(param.id);
-        if (message && param.userName) {
-          message.deleteBy = message.deleteBy.filter((userDelete) => {
-            return userDelete != param.userName;
-          });
-          message.deleteBy.push(param.userName);
-          message.save();
-          response.result = {
-            isSuccess: true,
-            code: "032",
-            data: message,
-          };
-        } else {
-          response.result.code = "033";
-        }
-        resole(response);
-      } catch {
-        response.result.code = "000";
-        reject(response);
-      }
-    });
-  },
-  recallmessage: function (param) {
-    return new Promise(async (resole, reject) => {
-      let response = new tools.response();
-      try {
-        let message = await Message.findById(param.id);
-        if (message && param.userName == message.sender) {
-          message.isRecall = true;
-          message.save();
-          response.result = {
-            isSuccess: true,
-            code: "034",
-            data: message,
-          };
-        } else {
-          response.result.code = "035";
-        }
-        resole(response);
-      } catch {
-        response.result.code = "000";
-        reject(response);
-      }
-    });
-  },
-  seenmessage: function (param) {
-    return new Promise(async (resole, reject) => {
-      let response = new tools.response();
-      try {
-        let message = await Message.findById(param.id);
-        if (message) {
-          message.status = "seen";
-          message.save;
-          response.result = {
-            isSuccess: true,
-            code: "036",
-            data: message,
-          };
-        }
-        resole(response);
-      } catch {
-        response.result.code = "000";
-        reject(response);
-      }
-    });
-  },
 };
 
 //000 Đã có lỗi sảy ra
@@ -704,13 +584,3 @@ export default {
 //025 Lấy dữ liệu theo tùy chọn không thành công
 //026 Cập nhật thông tin người dùng thành công
 //027 Cập nhật thông tin người dùng thất bại
-//028 Gửi tin nhắn thành công
-//029 Gửi tin nhắn thất bại
-//030 Lấy tin nhắn thành công
-//031 lấy tin nhắn thất bại
-//032 Xóa tin nhắn thành công
-//033 Xóa tin nhắn thất bại
-//034 Thu hồi tin nhắn thành công
-//035 Thu hồi tin nhắn không thành công
-//036 Đã xem tin nhắn
-//037 Xem tin nhắn thất bại
