@@ -6,7 +6,7 @@ const tools = {
   response: function () {
     this.result = {
       isSuccess: false,
-      code: "000",
+      code: "100",
     };
     this.status = 200;
   },
@@ -43,7 +43,7 @@ export default {
         };
         resole(response);
       } catch {
-        response.result.code = "000";
+        response.result.code = "100";
         reject(response);
       }
     });
@@ -64,12 +64,13 @@ export default {
         }
         resole(response);
       } catch {
-        response.result.code = "000";
+        response.result.code = "100";
         reject(response);
       }
     });
   },
 };
 
+// 100 Có lỗi xảy ra trong api ảnh
 // 101 upload ảnh thành công
 // 102 lấy ảnh thành công

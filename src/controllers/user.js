@@ -55,6 +55,7 @@ export default {
     const { result, status } = await userServices.updateinfouser(req.body);
     return res.status(status).json(result);
   },
+  //
   sendmessageV2: async (req, res) => {
     const { result, status } = await userServices.sendmessageV2(req.body);
     return res.status(status).json(result);
@@ -75,6 +76,10 @@ export default {
   },
   seenmessage: async (req, res) => {
     const { result, status } = await userServices.seenmessage(req.body);
+    return res.status(status).json(result);
+  },
+  clearconversation: async (req, res) => {
+    const { result, status } = await userServices.clearconversation(req.body);
     return res.status(status).json(result);
   },
 };
